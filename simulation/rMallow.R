@@ -1,5 +1,5 @@
 library(stats) #sampler from multinomial
-mallowSampler = function(sigma, phi){
+rMallow = function(sigma, phi){
   #sigma is the reference ranking in the form (sig1, sig2,..., sigm )
   #phi is the dispersion parameter
   if(phi <= 0 | phi > 1){
