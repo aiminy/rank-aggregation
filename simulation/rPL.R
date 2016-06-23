@@ -13,9 +13,12 @@ rPL = function(S, beta = 2){
   #sample from Gumbell distribution
   utility = rgumbel(nitem, scale = beta, location = mu)
   names(utility) = 1:nitem #assign labels to items
-  #get rank
+  #get ranking
   ranking = as.numeric(names(sort(utility, decreasing = TRUE)))
   
-  return(ranking)
+  #calculate ranks of each item
+  ranks = match(1:nitem, ranking)
+  
+  return(list(ranks = ranks, ranking = ranking))
 }
 

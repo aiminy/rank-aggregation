@@ -23,6 +23,10 @@ rBT = function(S){
   names(wins) = 1:nitem
   
   ranking = as.numeric(names(sort(wins, decreasing = TRUE)))
-  return(ranking)
+  
+  #calculate ranks of each item
+  ranks = match(1:nitem, ranking)
+  
+  return(list(ranks = ranks, ranking = ranking))
 }
 

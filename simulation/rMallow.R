@@ -21,7 +21,10 @@ rMallow = function(sigma, phi){
     ranking = append(ranking, sigma[i], ind)
   }
   
-  return(ranking)
+  #calculate ranks of each item
+  ranks = match(1:nitem, ranking)
+  
+  return(list(ranks = ranks, ranking = ranking))
   
 }
 
