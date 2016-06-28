@@ -27,6 +27,10 @@ sgdBT = function(data, mu, sigma, rate, maxiter = 1000, tol = 1e-9, start){
     for(i in 1:nobs){ 
       
       niter = niter + 1
+      #evaluate the likelihood as well as the gradient
+      #only used for small dataset (where we want to decide the learning rate)
+      #if used for big dataset, where we don't want to
+      #evaluate likelihood everytime, the function should be modified
       res_temp = targetBT(score, data, mu, sigma)
       #store the value of the target function
       target[niter] = res_temp[[1]]
