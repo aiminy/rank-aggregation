@@ -1,3 +1,5 @@
+#only used for small dataset
+#should be optimized for large dataset
 sgdBT = function(data, mu, sigma, rate, maxiter = 1000, tol = 1e-9, start){
   source('targetBT.R')
   #let m be the number of varieties,
@@ -54,3 +56,36 @@ sgdBT = function(data, mu, sigma, rate, maxiter = 1000, tol = 1e-9, start){
   
   return(list(value = target, niter = niter, score = score))
 }
+
+
+
+#test
+set.seed(1)
+score = runif(100, 1, 100)
+names(score) = 1:100 #assign labels
+data = matrix(0, 100, 100)
+for(i in 1:100){
+  data[i, ] = rThurstone(S = score, Svar = 1)$ranks
+}
+
+
+res = sgdBT(data, sigma = diag(rep(1, 100)), rate = 0.1, 
+             mu = rep(1, 100), start = rep(1, 100), maxiter = 20, tol = 1e-9)
+
+#plot to see if the function value decreases
+plot(1:length(res[[1]]), res[[1]], type = 'l')
+
+#estimated scores after 20 iterations
+est_score = res$score
+names(est_score) = 1:100 #assign labels
+#calculate ranking
+est_ranking = as.numeric(names(sort(score, decreasing = T)))
+real_ranking = as.numeric(names(sort(est_score, decreasing = T)))
+est_ranking
+real_ranking
+#calculate ranks
+real_rank = match(1:100, real_ranking)
+est_rank = match(1:100, est_ranking)
+#20 steps in sgd produces a fairly good estimation of ranking
+cor(cbind(est_rank, real_rank), method = 'kendall')
+
