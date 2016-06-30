@@ -1,6 +1,5 @@
 #calculate the target function to minimize in the B-T model
 #as well as the gradient for each observation (in Jacobian-like style)
-
 targetBT = function(score, data, mu, sigma){
   #browser()
   
