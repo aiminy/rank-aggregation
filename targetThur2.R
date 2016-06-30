@@ -1,6 +1,6 @@
 #Thurstone model modified to accommodate the 'adherence parameter'
 
-#calculate the target function to minimize in the B-T model
+#calculate the target function to minimize in the Thurstone model
 #as well as the gradient for each observation (in Jacobian-like style)
 
 targetThur2 = function(score, adherence, data, mu, sigma){
