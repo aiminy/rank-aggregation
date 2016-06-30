@@ -1,4 +1,4 @@
-#only used for small dataset
+#only used for small dataset 
 #should be optimized for large dataset
 
 sgdThur = function(data, mu, sigma, rate, maxiter = 1000, tol = 1e-9, start){
