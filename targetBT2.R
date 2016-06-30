@@ -1,4 +1,4 @@
-#the BT model modified to accomodate 'reliability' parameter
+#the BT model modified to accomodate 'adherence' parameter
 
 #calculate the target function to minimize in the B-T model
 #as well as the gradient for each observation (in Jacobian-like style)
@@ -72,3 +72,4 @@ targetBT2 = function(score, adherence, data, mu, sigma){
   
   return(list(value = target_value, Jacobian = J))
 }
+
