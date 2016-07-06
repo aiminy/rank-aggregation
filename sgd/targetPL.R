@@ -1,10 +1,6 @@
-#Plackett-Luce model modified to accommodate the 'adherence parameter'
-
-#calculate the target function to minimize in the Plackett-Luce model
-#as well as the gradient for each observation (in Jacobian-like style)
-
-targetPL2 = function(score, adherence, data, mu, sigma){
-  #browser()
+#return the value of the function to be minimized
+#as well as the gradient w.r.t. index-th observation
+targetPL = function(index, score, adherence, data, mu, sigma){
   #let m be the number of varieties,
   #let n be the number of farmers.
   #data is an n*m matrix,
@@ -16,14 +12,14 @@ targetPL2 = function(score, adherence, data, mu, sigma){
   nobs = nrow(data)
   nvar = ncol(data)
   colnames(data) = 1:nvar #assign labels to varieties
-  
-  #J-matrix, each row is the gradient
-  #in each row, the first nvar element is the gradient for score
+
+  #the first nvar element is the gradient for score
   #the last nobs element is the gradient for adherence
-  J = matrix(0, nobs, (nvar + nobs))
+  gradient = rep(0, nvar + nobs)
   #initialize
   inv_sigma = solve(sigma)
   target_value = as.numeric(0.5 * (t(score - mu) %*% inv_sigma %*% (score - mu)))
+  gradient[1:nvar] = 1 / nobs * inv_sigma %*% (score - mu)
   
   #loop over all observations
   for(i in 1:nobs){
@@ -34,10 +30,7 @@ targetPL2 = function(score, adherence, data, mu, sigma){
     
     #the length of i-th observation
     nrank = length(ranks)
-    
-    #initialize the gradient
-    gradient = J[i, ]
-    gradient[1:nvar] = 1 / nobs * inv_sigma %*% (score - mu)
+  
     
     #loop over all pairwise comparisons
     for(j in 1:(nrank - 1)){
@@ -60,22 +53,24 @@ targetPL2 = function(score, adherence, data, mu, sigma){
       #update the value of the target function
       target_value = target_value + log(1 + sum_temp)
       
-      #update the gradient w.r.t. score
-      after_j = ranking[(j + 1):nrank] #varieties ranked after variety j
-      gradient[after_j] = gradient[after_j] + (adherence[i] / (1 + sum_temp)) * 
-        exp(-adherence[i] * (score[win] - score[after_j]))
-      gradient[win] = gradient[win] - (adherence[i] / (1 + sum_temp)) * sum_temp
-      
-      #update the gradient w.r.t. adherence
-      gradient[nvar + i] = gradient[nvar + i] + (1 / (1 + sum_temp)) * sum_temp2
+      if(index == i){
+        #update the gradient w.r.t. score
+        after_j = ranking[(j + 1):nrank] #varieties ranked after variety j
+        gradient[after_j] = gradient[after_j] + (adherence[i] / (1 + sum_temp)) * 
+          exp(-adherence[i] * (score[win] - score[after_j]))
+        gradient[win] = gradient[win] - (adherence[i] / (1 + sum_temp)) * sum_temp
+        
+        #update the gradient w.r.t. adherence
+        gradient[nvar + i] = gradient[nvar + i] + (1 / (1 + sum_temp)) * sum_temp2
+        
+      }
       
     }
     
-    J[i, ] = gradient
     
   }
   
-  return(list(value = target_value, Jacobian = J))
+  return(list(value = target_value, gradient = gradient))
   
   
 }

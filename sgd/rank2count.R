@@ -1,7 +1,6 @@
 #transform the ranking data into a count matrix
 rank2count = function(data){
   
-  #browser()
   #inpute data is a vector,
   #where i-th element in the vector is the rank assigned to the i-th item
   #the entry where item not ranked is replaced by 0
