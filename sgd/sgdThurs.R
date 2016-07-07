@@ -1,4 +1,4 @@
-sgdThurs = function(data, mu, sigma, rate, maxiter = 1000, tol = 1e-9, start){
+sgdThurs = function(data, mu, sigma, rate, maxiter = 1000, tol = 1e-9, start, decay){
   #let m be the number of varieties,
   #let n be the number of farmers.
   #data is an n*m matrix,
@@ -25,7 +25,9 @@ sgdThurs = function(data, mu, sigma, rate, maxiter = 1000, tol = 1e-9, start){
   while(flag){
     
     for(i in 1:nobs){
+      
       niter = niter + 1
+      
       score_temp = param[1:nvar]
       adherence_temp = param[(nvar + 1):(nvar + nobs)]
       #evaluate the log-posterior as well as the gradient
@@ -43,6 +45,7 @@ sgdThurs = function(data, mu, sigma, rate, maxiter = 1000, tol = 1e-9, start){
       #update the parameters
       param = param - rate * gradient
       
+      
       #check the convergence criteria: square of the change of target values
       if(niter > 1){
         if((target[niter] - target[niter - 1]) ^ 2 < tol | niter > maxiter){
@@ -52,7 +55,7 @@ sgdThurs = function(data, mu, sigma, rate, maxiter = 1000, tol = 1e-9, start){
         
         #update learning rate if the target value don't decrease
         if((target[niter - 1] - target[niter]) / target[niter - 1] < 0){
-          rate = rate / 1.1
+          rate = rate / decay
         }
       }
       

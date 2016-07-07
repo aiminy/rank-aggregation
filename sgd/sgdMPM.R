@@ -1,4 +1,4 @@
-sgdMPM = function(data, mu, sigma, rate, maxiter = 1000, tol = 1e-9, start){
+sgdMPM = function(data, mu, sigma, rate, maxiter = 1000, tol = 1e-9, start, decay){
   source('targetMPM.R')
   #let m be the number of varieties,
   #let n be the number of farmers.
@@ -59,7 +59,7 @@ sgdMPM = function(data, mu, sigma, rate, maxiter = 1000, tol = 1e-9, start){
         
         #update learning rate if the target value don't decrease
         if((target[niter - 1] - target[niter]) / target[niter - 1] < 0){
-          rate = rate / 1.05
+          rate = rate / decay
         }
       }
       
