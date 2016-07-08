@@ -36,11 +36,13 @@ testRate = function(rate_vec, nsim){
     }
     #use alpha design to assign varieties to farmers
     design = design.alpha(1:33, 3, 3)$sketch
+    
     #allocation of varieties
     alloc = matrix(0, 33, 3)
     for(i in 1:3){
       alloc[((i - 1) * 11 + 1):(i * 11), ] = matrix(as.numeric(design[[i]]), 11, 3)
     }
+    
     #select the varieties in data
     for(i in 1:33){
       data[i, ][-alloc[i, ]] = 0
