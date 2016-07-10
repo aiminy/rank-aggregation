@@ -61,8 +61,8 @@ simRank = function(h2, nvar_vec, nobs_vec, marker, marker_mu, marker_Sig, nsim, 
     marker_eff = mvrnorm(1, marker_mu, marker_Sig)
     
     #score vector
-    score = causal %*% marker_eff
-    var_score = as.numeric(var(score))
+    score = as.vector(causal %*% marker_eff)
+    var_score = var(score)
     
     #compute Gaussian error from observers, given heritability
     var_obs = (1 / h2 - 1) * var_score
@@ -81,7 +81,6 @@ simRank = function(h2, nvar_vec, nobs_vec, marker, marker_mu, marker_Sig, nsim, 
         samplerFunc = rThurstone
         #parameter related to Gaussian errors passed to the sampler
         var_param = rep(var_obs, nvar)
-        
       }
       
       if(sampler == 'PL'){
@@ -90,6 +89,9 @@ simRank = function(h2, nvar_vec, nobs_vec, marker, marker_mu, marker_Sig, nsim, 
         #parameter related to Gaussian errors passed to the sampler
         var_param = sqrt(6 * var_obs / pi^2)
         
+        #tune the score so that the location parameter in the gumbel distribution
+        #is the original score
+        score = score / var_param
       }
       
       #generate full ranking data
