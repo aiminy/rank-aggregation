@@ -228,7 +228,7 @@ simRank = function(h2, nvar_vec, nobs_vec, marker, marker_mu, marker_Sig, nsim, 
             if(niter %% 100 == 1){
               
               #plot
-              #file name is orderde as sampler_model_nvar_nobs
+              #file name is ordered as sampler_model_nvar_nobs
               pdf(file = paste(paste(sampler, model, nvar, nobs, sep = '_'), '.pdf', sep = ''),
                   width = 8.5, height = 11)
               par(mfrow = c(2, 1))
