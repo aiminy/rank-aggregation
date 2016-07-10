@@ -191,7 +191,7 @@ simRank = function(h2, nvar_vec, nobs_vec, marker, marker_mu, marker_Sig, nsim, 
               
               sgdFunc = sgdMPM
               start = c(start, rep(1, nvar))
-              rate = 0.3
+              rate = 0.1
             }
             
             #result incorporating relationship matrix
@@ -271,3 +271,6 @@ simRank = function(h2, nvar_vec, nobs_vec, marker, marker_mu, marker_Sig, nsim, 
   
 }
 
+
+
+simRank(0.8, 9, 10, data, runif(50, 1, 30), diag(1, 50), 2, 266)
