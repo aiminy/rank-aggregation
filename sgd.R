@@ -422,6 +422,9 @@ sgdThurs = function(data, mu, sigma, rate, maxiter = 1000, tol = 1e-9, start, de
       #update the parameters
       param = param - rate * gradient
       
+      #if the updated adherence is negative, change it to 0.5
+      param[(nvar + 1):(nvar + nobs)][param[(nvar + 1):(nvar + nobs)] < 0] = 0.5
+      
       
       #check the convergence criteria: square of the change of target values
       if(niter > 1){
