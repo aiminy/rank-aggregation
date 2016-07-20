@@ -3,6 +3,8 @@ library(EMMREML)
 
 
 ###this function can only be used to analysi tricot comparisons
+
+#require: each variety at least be compared once, i.e. nobs * 3 >= nvar
 rankLM = function(data, K = NULL){
   #browser()
   #let m be the number of varieties,
@@ -51,7 +53,14 @@ rankLM = function(data, K = NULL){
     
     y = data_linear$rank #the response
     X = as.matrix(rep(1, length(y))) #the intercept
-    Z = diag(1, nvar) %x% rep(1, 3) #
+    #Z: design matrix for random effects
+    Z = matrix(0, length(y), nvar)
+    for(i in 1:length(y)){
+      
+      Z[i, as.numeric(data_linear$variety[i])] = 1
+      
+    }
+    
     fit_m = emmreml(y, X, Z, K)
     
     ranking = order(as.vector(fit_m$uhat))
