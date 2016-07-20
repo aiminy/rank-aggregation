@@ -1,6 +1,7 @@
 library(lme4)
 library(EMMREML)
 
+
 ###this function can only be used to analysi tricot comparisons
 rankLM = function(data, K = NULL){
   #browser()
@@ -18,13 +19,13 @@ rankLM = function(data, K = NULL){
   
   data_raw = as.vector(data)
   
-  data_linear = matrix(0, nentry, 3)
+  data_linear = matrix(0, nvar * nobs, 3)
   # the second column is the label of each variety
-  data_linear[, 2] = rep(1:dim2, each = dim1)
+  data_linear[, 2] = rep(1:nvar, each = nobs)
   # the third column is the label for each farmer
-  data_linear[, 3] = rep(1:dim1, times = dim2)
+  data_linear[, 3] = rep(1:nobs, times = nvar)
   # the first column is the rank
-  for(i in 1:nentry){
+  for(i in 1:(nvar * nobs)){
     
     data_linear[i, 1] = data_raw[i]
     
@@ -43,18 +44,18 @@ rankLM = function(data, K = NULL){
     blup_var = coef(fit)$variety #larger value means less competitive
     
     ranking = order(blup_var)
-    ranks = match(1:dim2, ranking)
+    ranks = match(1:nvar, ranking)
     
   } else{
     
     
     y = data_linear$rank #the response
     X = as.matrix(rep(1, length(y))) #the intercept
-    Z = diag(1, dim2) %x% rep(1, 3) #
+    Z = diag(1, nvar) %x% rep(1, 3) #
     fit_m = emmreml(y, X, Z, K)
     
     ranking = order(as.vector(fit_m$uhat))
-    ranks = match(1:dim2, ranking)
+    ranks = match(1:nvar, ranking)
     
     
   }
@@ -62,3 +63,5 @@ rankLM = function(data, K = NULL){
   return(list(ranks = ranks, ranking = ranking))
   
 }
+
+
